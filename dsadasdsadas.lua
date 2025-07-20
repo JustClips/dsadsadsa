@@ -1,6 +1,6 @@
---// Eps1llonUI - 2025 Modern | Pro UI
+--// Eps1llonUI - 2025 Modern | Pro UI (Updated with Rayfield-inspired elements)
 local Eps1llonUI = {}
-Eps1llonUI._VERSION = "2025.07.19-ProUX"
+Eps1llonUI._VERSION = "2025.07.19-ProUX-Rayfield"
 
 local player           = game.Players.LocalPlayer
 local TweenService     = game:GetService('TweenService')
@@ -262,136 +262,189 @@ function Eps1llonUI:AddLabel(tab, opts)
     lbl.TextSize = opts.TextSize or 15
     lbl.TextColor3 = opts.TextColor3 or Color3.fromRGB(220,220,220)
     lbl.TextXAlignment = opts.TextXAlignment or Enum.TextXAlignment.Left
-    lbl.TextYAlignment = Enum.TextYAlignment.Center
+    lbl.TextYAlignment = opts.TextYAlignment or Enum.TextYAlignment.Center
     lbl.LayoutOrder = #sec:GetChildren() + 1
     lbl.Parent = sec
     return lbl
 end
 
--- MODERN TOGGLE (Accent Color)
+-- RAYFIELD-INSPIRED TOGGLE
 function Eps1llonUI:AddToggle(tab, opts)
     local sec = tabSections[tab]
     assert(sec, "Tab "..tostring(tab).." does not exist.")
 
     local cont = Instance.new("Frame")
-    cont.Size = UDim2.new(1, -8, 0, 40)
-    cont.BackgroundColor3 = opts.BackgroundColor3 or Color3.fromRGB(35,36,40)
-    cont.BackgroundTransparency = 0.07
+    cont.Size = UDim2.new(1, -8, 0, 48)
+    cont.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+    cont.BackgroundTransparency = 0.3
     cont.BorderSizePixel = 0
-    Instance.new("UICorner", cont).CornerRadius = UDim.new(0, 10)
+    Instance.new("UICorner", cont).CornerRadius = UDim.new(0, 12)
     cont.LayoutOrder = #sec:GetChildren() + 1
     cont.Parent = sec
 
+    -- Rayfield-style border
+    local border = Instance.new("UIStroke", cont)
+    border.Thickness = 1.5
+    border.Color = Color3.fromRGB(50, 50, 55)
+    border.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
     local lbl = Instance.new("TextLabel", cont)
-    lbl.Size = UDim2.new(0.70, 0, 1, 0)
-    lbl.Position = UDim2.new(0, 12, 0, 0)
+    lbl.Size = UDim2.new(0.65, 0, 1, 0)
+    lbl.Position = UDim2.new(0, 16, 0, 0)
     lbl.BackgroundTransparency = 1
     lbl.Text = opts.Name or "Toggle"
-    lbl.Font = Enum.Font.GothamBold
-    lbl.TextSize = 15
-    lbl.TextColor3 = Color3.fromRGB(230, 230, 240)
+    lbl.Font = Enum.Font.GothamMedium
+    lbl.TextSize = 16
+    lbl.TextColor3 = Color3.fromRGB(240, 240, 245)
     lbl.TextXAlignment = Enum.TextXAlignment.Left
 
+    -- Rayfield toggle design - larger and more rounded
     local toggleBG = Instance.new("Frame", cont)
-    toggleBG.Size = UDim2.new(0, 54, 0, 24)
-    toggleBG.Position = UDim2.new(1, -70, 0.5, -12)
-    toggleBG.BackgroundColor3 = opts.Default and Eps1llonUI._ACCENT or Color3.fromRGB(44,44,47)
+    toggleBG.Size = UDim2.new(0, 60, 0, 28)
+    toggleBG.Position = UDim2.new(1, -76, 0.5, -14)
+    toggleBG.BackgroundColor3 = opts.Default and Eps1llonUI._ACCENT or Color3.fromRGB(40, 40, 45)
     toggleBG.BorderSizePixel = 0
-    Instance.new("UICorner", toggleBG).CornerRadius = UDim.new(1, 999)
-    toggleBG.ClipsDescendants = true
+    Instance.new("UICorner", toggleBG).CornerRadius = UDim.new(0, 14)
+    toggleBG.ClipsDescendants = false
+
+    -- Rayfield-style shadow effect
+    local shadow = Instance.new("Frame", toggleBG)
+    shadow.Size = UDim2.new(1, 4, 1, 4)
+    shadow.Position = UDim2.new(0, -2, 0, -2)
+    shadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    shadow.BackgroundTransparency = 0.8
+    shadow.ZIndex = -1
+    Instance.new("UICorner", shadow).CornerRadius = UDim.new(0, 16)
 
     local knob = Instance.new("Frame", toggleBG)
-    knob.Size = UDim2.new(0, 20, 0, 20)
-    knob.Position = opts.Default and UDim2.new(1,-22,0,2) or UDim2.new(0,2,0,2)
-    knob.BackgroundColor3 = Eps1llonUI._ACCENT
+    knob.Size = UDim2.new(0, 24, 0, 24)
+    knob.Position = opts.Default and UDim2.new(1,-26,0,2) or UDim2.new(0,2,0,2)
+    knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     knob.BorderSizePixel = 0
-    Instance.new("UICorner", knob).CornerRadius = UDim.new(1,999)
+    Instance.new("UICorner", knob).CornerRadius = UDim.new(0, 12)
     knob.ZIndex = 2
+
+    -- Rayfield knob shadow
+    local knobShadow = Instance.new("Frame", knob)
+    knobShadow.Size = UDim2.new(1, 2, 1, 2)
+    knobShadow.Position = UDim2.new(0, -1, 0, -1)
+    knobShadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    knobShadow.BackgroundTransparency = 0.7
+    knobShadow.ZIndex = -1
+    Instance.new("UICorner", knobShadow).CornerRadius = UDim.new(0, 13)
 
     local value = opts.Default and true or false
     local function setToggle(val)
         value = val
-        toggleBG.BackgroundColor3 = val and Eps1llonUI._ACCENT or Color3.fromRGB(44,44,47)
-        TweenService:Create(knob, TweenInfo.new(0.19, Enum.EasingStyle.Quad), {
-            Position = val and UDim2.new(1,-22,0,2) or UDim2.new(0,2,0,2)
+        TweenService:Create(toggleBG, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {
+            BackgroundColor3 = val and Eps1llonUI._ACCENT or Color3.fromRGB(40, 40, 45)
+        }):Play()
+        TweenService:Create(knob, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {
+            Position = val and UDim2.new(1,-26,0,2) or UDim2.new(0,2,0,2)
         }):Play()
         if opts.Callback then opts.Callback(val) end
     end
-    toggleBG.InputBegan:Connect(function(i)
+    
+    cont.InputBegan:Connect(function(i)
         if i.UserInputType==Enum.UserInputType.MouseButton1 or isTouch(i) then
             setToggle(not value)
         end
     end)
-    toggleBG.TouchTap:Connect(function() setToggle(not value) end)
+    
+    -- Theme coloring
     Eps1llonUI._OnThemeChange = Eps1llonUI._OnThemeChange or {}
     table.insert(Eps1llonUI._OnThemeChange, function(accent)
-        knob.BackgroundColor3 = accent
         if value then toggleBG.BackgroundColor3 = accent end
     end)
     return cont
 end
 
--- MODERN SLIDER (one line, accent knob/bar)
+-- RAYFIELD-INSPIRED SLIDER
 function Eps1llonUI:AddSlider(tab, opts)
     local sec = tabSections[tab]
     assert(sec, "Tab "..tostring(tab).." does not exist.")
+    
     local cont = Instance.new("Frame")
-    cont.Size = UDim2.new(1,-8,0,38)
-    cont.BackgroundColor3 = Color3.fromRGB(35,36,40)
-    cont.BackgroundTransparency = 0.1
+    cont.Size = UDim2.new(1, -8, 0, 55)
+    cont.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+    cont.BackgroundTransparency = 0.3
     cont.BorderSizePixel = 0
-    Instance.new("UICorner", cont).CornerRadius = UDim.new(0,9)
+    Instance.new("UICorner", cont).CornerRadius = UDim.new(0, 12)
     cont.LayoutOrder = #sec:GetChildren() + 1
     cont.Parent = sec
 
+    -- Rayfield-style border
+    local border = Instance.new("UIStroke", cont)
+    border.Thickness = 1.5
+    border.Color = Color3.fromRGB(50, 50, 55)
+    border.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
     local lbl = Instance.new("TextLabel", cont)
-    lbl.Size = UDim2.new(0,135,1,0)
-    lbl.Position = UDim2.new(0,10,0,0)
+    lbl.Size = UDim2.new(1, -20, 0, 22)
+    lbl.Position = UDim2.new(0, 16, 0, 8)
     lbl.Text = opts.Name or "Slider"
-    lbl.Font = Enum.Font.GothamBold
-    lbl.TextSize = 15
-    lbl.TextColor3 = Color3.fromRGB(220,220,220)
+    lbl.Font = Enum.Font.GothamMedium
+    lbl.TextSize = 16
+    lbl.TextColor3 = Color3.fromRGB(240, 240, 245)
     lbl.BackgroundTransparency = 1
     lbl.TextXAlignment = Enum.TextXAlignment.Left
 
-    local barBG = Instance.new("Frame", cont)
-    barBG.Size = UDim2.new(0, 200, 0, 16)
-    barBG.Position = UDim2.new(0,160,0.5,-8)
-    barBG.BackgroundColor3 = Color3.fromRGB(28,28,32)
-    barBG.BorderSizePixel = 0
-    Instance.new("UICorner", barBG).CornerRadius = UDim.new(1, 999)
-    barBG.ClipsDescendants = true
-
-    local fill = Instance.new("Frame", barBG)
-    fill.Size = UDim2.new(((opts.Default or opts.Min)-opts.Min)/(opts.Max-opts.Min),0,1,0)
-    fill.Position = UDim2.new(0,0,0,0)
-    fill.BackgroundColor3 = Eps1llonUI._ACCENT
-    fill.BorderSizePixel = 0
-    Instance.new("UICorner", fill).CornerRadius = UDim.new(1,999)
-
-    local knob = Instance.new("Frame", barBG)
-    knob.Size = UDim2.new(0,20,0,20)
-    knob.Position = UDim2.new(fill.Size.X.Scale, fill.Size.X.Offset-10,0,-2)
-    knob.BackgroundColor3 = Eps1llonUI._ACCENT
-    knob.BorderSizePixel = 0
-    Instance.new("UICorner", knob).CornerRadius = UDim.new(1,999)
-
     local valText = Instance.new("TextLabel", cont)
-    valText.Size = UDim2.new(0, 38, 1, 0)
-    valText.Position = UDim2.new(1, -46, 0, 0)
+    valText.Size = UDim2.new(0, 60, 0, 22)
+    valText.Position = UDim2.new(1, -76, 0, 8)
     valText.BackgroundTransparency = 1
-    valText.TextColor3 = Color3.fromRGB(210,240,255)
+    valText.TextColor3 = Eps1llonUI._ACCENT
     valText.Font = Enum.Font.GothamBold
     valText.TextSize = 15
     valText.TextXAlignment = Enum.TextXAlignment.Right
     valText.TextYAlignment = Enum.TextYAlignment.Center
     valText.Text = tostring(opts.Default or opts.Min)
 
+    -- Rayfield slider track
+    local barBG = Instance.new("Frame", cont)
+    barBG.Size = UDim2.new(1, -32, 0, 6)
+    barBG.Position = UDim2.new(0, 16, 1, -18)
+    barBG.BackgroundColor3 = Color3.fromRGB(45, 45, 50)
+    barBG.BorderSizePixel = 0
+    Instance.new("UICorner", barBG).CornerRadius = UDim.new(0, 3)
+
+    -- Rayfield fill bar
+    local fill = Instance.new("Frame", barBG)
+    fill.Size = UDim2.new(((opts.Default or opts.Min)-opts.Min)/(opts.Max-opts.Min), 0, 1, 0)
+    fill.Position = UDim2.new(0, 0, 0, 0)
+    fill.BackgroundColor3 = Eps1llonUI._ACCENT
+    fill.BorderSizePixel = 0
+    Instance.new("UICorner", fill).CornerRadius = UDim.new(0, 3)
+
+    -- Rayfield knob (larger and more prominent)
+    local knob = Instance.new("Frame", barBG)
+    knob.Size = UDim2.new(0, 16, 0, 16)
+    knob.Position = UDim2.new(fill.Size.X.Scale, fill.Size.X.Offset - 8, 0, -5)
+    knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    knob.BorderSizePixel = 0
+    Instance.new("UICorner", knob).CornerRadius = UDim.new(0, 8)
+    knob.ZIndex = 2
+
+    -- Rayfield knob shadow
+    local knobShadow = Instance.new("Frame", knob)
+    knobShadow.Size = UDim2.new(1, 4, 1, 4)
+    knobShadow.Position = UDim2.new(0, -2, 0, -2)
+    knobShadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    knobShadow.BackgroundTransparency = 0.6
+    knobShadow.ZIndex = -1
+    Instance.new("UICorner", knobShadow).CornerRadius = UDim.new(0, 10)
+
     local function setSliderPos(x)
-        local pct = math.clamp(x/barBG.AbsoluteSize.X,0,1)
+        local pct = math.clamp(x/barBG.AbsoluteSize.X, 0, 1)
         local v = math.floor((opts.Min or 0) + ((opts.Max or 100)-(opts.Min or 0))*pct + 0.5)
-        fill.Size = UDim2.new(pct,0,1,0)
-        knob.Position = UDim2.new(pct, -10, 0, -2)
+        
+        TweenService:Create(fill, TweenInfo.new(0.1, Enum.EasingStyle.Quad), {
+            Size = UDim2.new(pct, 0, 1, 0)
+        }):Play()
+        TweenService:Create(knob, TweenInfo.new(0.1, Enum.EasingStyle.Quad), {
+            Position = UDim2.new(pct, -8, 0, -5)
+        }):Play()
+        
         valText.Text = tostring(v)
         if opts.Callback then opts.Callback(v) end
     end
@@ -406,190 +459,175 @@ function Eps1llonUI:AddSlider(tab, opts)
             end)
         end
     end)
+    
     UserInputService.InputChanged:Connect(function(i)
         if dragging and (i.UserInputType==Enum.UserInputType.MouseMovement or isTouch(i)) then
             setSliderPos(i.Position.X - barBG.AbsolutePosition.X)
         end
     end)
-    barBG.TouchTap:Connect(function(x) setSliderPos(x - barBG.AbsolutePosition.X) end)
+    
+    -- Theme coloring
     Eps1llonUI._OnThemeChange = Eps1llonUI._OnThemeChange or {}
     table.insert(Eps1llonUI._OnThemeChange, function(accent)
         fill.BackgroundColor3 = accent
-        knob.BackgroundColor3 = accent
+        valText.TextColor3 = accent
     end)
-
+    
     return cont, valText
 end
 
--- COLOR SLIDER (hue gradient)
-function Eps1llonUI:AddColorSlider(tab, opts)
-    local sec = tabSections[tab]
-    assert(sec, "Tab "..tostring(tab).." does not exist.")
-
-    local cont = Instance.new("Frame")
-    cont.Size = UDim2.new(1, -8, 0, 38)
-    cont.BackgroundColor3 = Color3.fromRGB(35,36,40)
-    cont.BackgroundTransparency = 0.1
-    cont.BorderSizePixel = 0
-    Instance.new("UICorner", cont).CornerRadius = UDim.new(0,9)
-    cont.LayoutOrder = #sec:GetChildren() + 1
-    cont.Parent = sec
-
-    local lbl = Instance.new("TextLabel", cont)
-    lbl.Size = UDim2.new(0,135,1,0)
-    lbl.Position = UDim2.new(0,10,0,0)
-    lbl.Text = opts.Name or "Color"
-    lbl.Font = Enum.Font.GothamBold
-    lbl.TextSize = 15
-    lbl.TextColor3 = Color3.fromRGB(220,220,220)
-    lbl.BackgroundTransparency = 1
-    lbl.TextXAlignment = Enum.TextXAlignment.Left
-
-    local barBG = Instance.new("Frame", cont)
-    barBG.Size = UDim2.new(0, 200, 0, 16)
-    barBG.Position = UDim2.new(0,160,0.5,-8)
-    barBG.BorderSizePixel = 0
-    Instance.new("UICorner", barBG).CornerRadius = UDim.new(1, 999)
-    barBG.ClipsDescendants = true
-
-    local grad = Instance.new("UIGradient", barBG)
-    grad.Color = ColorSequence.new{
-        ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 0,   0  )),
-        ColorSequenceKeypoint.new(0.17, Color3.fromRGB(255, 255, 0  )),
-        ColorSequenceKeypoint.new(0.34, Color3.fromRGB(0,   255, 0  )),
-        ColorSequenceKeypoint.new(0.51, Color3.fromRGB(0,   255, 255)),
-        ColorSequenceKeypoint.new(0.68, Color3.fromRGB(0,   0,   255)),
-        ColorSequenceKeypoint.new(0.85, Color3.fromRGB(255, 0,   255)),
-        ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 0,   0  )),
-    }
-
-    local knob = Instance.new("Frame", barBG)
-    knob.Size = UDim2.new(0,20,0,20)
-    knob.Position = UDim2.new(0, -10, 0, -2)
-    knob.BackgroundColor3 = Eps1llonUI._ACCENT
-    knob.BorderSizePixel = 0
-    Instance.new("UICorner", knob).CornerRadius = UDim.new(1,999)
-    knob.ZIndex = 2
-
-    local valText = Instance.new("TextLabel", cont)
-    valText.Size = UDim2.new(0, 55, 1, 0)
-    valText.Position = UDim2.new(1, -61, 0, 0)
-    valText.BackgroundTransparency = 1
-    valText.TextColor3 = Color3.fromRGB(210,240,255)
-    valText.Font = Enum.Font.GothamBold
-    valText.TextSize = 15
-    valText.TextXAlignment = Enum.TextXAlignment.Right
-    valText.TextYAlignment = Enum.TextYAlignment.Center
-    valText.Text = opts.Default and string.format("#%02X%02X%02X",
-        math.floor(opts.Default.R*255),
-        math.floor(opts.Default.G*255),
-        math.floor(opts.Default.B*255)
-    ) or "#FF0000"
-
-    local dragging = false
-    local function update(x)
-        local pct = math.clamp((x - barBG.AbsolutePosition.X) / barBG.AbsoluteSize.X, 0, 1)
-        knob.Position = UDim2.new(pct, -10, 0, -2)
-        local color = Color3.fromHSV(pct, 1, 1)
-        valText.Text = string.format("#%02X%02X%02X",
-            math.floor(color.R*255), math.floor(color.G*255), math.floor(color.B*255)
-        )
-        if opts.Callback then opts.Callback(color) end
-    end
-
-    barBG.InputBegan:Connect(function(i)
-        if i.UserInputType==Enum.UserInputType.MouseButton1 or isTouch(i) then
-            dragging = true
-            update(i.Position.X)
-            i.Changed:Connect(function()
-                if i.UserInputState == Enum.UserInputState.End then dragging = false end
-            end)
-        end
-    end)
-    UserInputService.InputChanged:Connect(function(i)
-        if dragging and (i.UserInputType==Enum.UserInputType.MouseMovement or isTouch(i)) then
-            update(i.Position.X)
-        end
-    end)
-    barBG.InputEnded:Connect(function(i)
-        if i.UserInputType==Enum.UserInputType.MouseButton1 or isTouch(i) then dragging = false end
-    end)
-
-    if opts.Default then
-        local h = {opts.Default:ToHSV()}
-        update(barBG.AbsolutePosition.X + h[1] * barBG.AbsoluteSize.X)
-    end
-
-    Eps1llonUI._OnThemeChange = Eps1llonUI._OnThemeChange or {}
-    table.insert(Eps1llonUI._OnThemeChange, function(accent)
-        knob.BackgroundColor3 = accent
-    end)
-
-    return cont
-end
-
--- DROPDOWN MENU
+-- RAYFIELD-INSPIRED DROPDOWN
 function Eps1llonUI:AddDropdown(tab, opts)
     local sec = tabSections[tab]
     assert(sec, "Tab "..tostring(tab).." does not exist.")
-
+    
     local cont = Instance.new("Frame")
-    cont.Size = UDim2.new(1, -8, 0, 30)
-    cont.BackgroundTransparency = 1
+    cont.Size = UDim2.new(1, -8, 0, 48)
+    cont.BackgroundColor3 = Color3.fromRGB(30, 30, 35)
+    cont.BackgroundTransparency = 0.3
+    cont.BorderSizePixel = 0
+    Instance.new("UICorner", cont).CornerRadius = UDim.new(0, 12)
     cont.LayoutOrder = #sec:GetChildren() + 1
     cont.Parent = sec
 
-    local label = Instance.new("TextLabel", cont)
-    label.Size = UDim2.new(0.4, 0, 1, 0)
-    label.Text = opts.Name or "Select"
-    label.Font = Enum.Font.GothamBold
-    label.TextSize = 15
-    label.TextColor3 = Color3.fromRGB(220,220,220)
-    label.BackgroundTransparency = 1
-    label.TextXAlignment = Enum.TextXAlignment.Left
+    -- Rayfield-style border
+    local border = Instance.new("UIStroke", cont)
+    border.Thickness = 1.5
+    border.Color = Color3.fromRGB(50, 50, 55)
+    border.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
 
-    local btn = Instance.new("TextButton", cont)
-    btn.Size = UDim2.new(0.6, -4, 1, 0)
-    btn.Position = UDim2.new(0.4, 4, 0, 0)
-    btn.BackgroundColor3 = Color3.fromRGB(32,32,36)
-    btn.BorderSizePixel = 0
-    btn.Font = Enum.Font.GothamBold
-    btn.TextSize = 15
-    btn.TextColor3 = Color3.fromRGB(220,220,220)
-    btn.Text = opts.Default or opts.Options[1] or ""
-    Instance.new("UICorner", btn).CornerRadius = UDim.new(0,4)
+    local lbl = Instance.new("TextLabel", cont)
+    lbl.Size = UDim2.new(0.45, 0, 1, 0)
+    lbl.Position = UDim2.new(0, 16, 0, 0)
+    lbl.BackgroundTransparency = 1
+    lbl.Text = opts.Name or "Dropdown"
+    lbl.Font = Enum.Font.GothamMedium
+    lbl.TextSize = 16
+    lbl.TextColor3 = Color3.fromRGB(240, 240, 245)
+    lbl.TextXAlignment = Enum.TextXAlignment.Left
 
-    local list = Instance.new("Frame", cont)
-    list.Size = UDim2.new(0.6, -4, 0, #opts.Options * 28)
-    list.Position = UDim2.new(0.4, 4, 1, 2)
-    list.BackgroundColor3 = Color3.fromRGB(32,32,36)
-    list.BorderSizePixel = 0
-    list.Visible = false
-    Instance.new("UICorner", list).CornerRadius = UDim.new(0,4)
+    -- Rayfield dropdown button
+    local dropBtn = Instance.new("TextButton", cont)
+    dropBtn.Size = UDim2.new(0.5, -20, 0, 32)
+    dropBtn.Position = UDim2.new(0.5, 4, 0.5, -16)
+    dropBtn.BackgroundColor3 = Color3.fromRGB(40, 40, 45)
+    dropBtn.BorderSizePixel = 0
+    dropBtn.Text = opts.Default or "Select..."
+    dropBtn.Font = Enum.Font.GothamMedium
+    dropBtn.TextSize = 14
+    dropBtn.TextColor3 = Color3.fromRGB(220, 220, 225)
+    dropBtn.TextXAlignment = Enum.TextXAlignment.Left
+    Instance.new("UICorner", dropBtn).CornerRadius = UDim.new(0, 8)
 
+    -- Dropdown arrow
+    local arrow = Instance.new("TextLabel", dropBtn)
+    arrow.Size = UDim2.new(0, 20, 1, 0)
+    arrow.Position = UDim2.new(1, -20, 0, 0)
+    arrow.BackgroundTransparency = 1
+    arrow.Text = "▼"
+    arrow.Font = Enum.Font.GothamBold
+    arrow.TextSize = 12
+    arrow.TextColor3 = Eps1llonUI._ACCENT
+    arrow.TextXAlignment = Enum.TextXAlignment.Center
+
+    -- Padding for dropdown text
+    local textPadding = Instance.new("UIPadding", dropBtn)
+    textPadding.PaddingLeft = UDim.new(0, 12)
+    textPadding.PaddingRight = UDim.new(0, 25)
+
+    -- Rayfield dropdown list
+    local dropList = Instance.new("Frame", cont)
+    dropList.Size = UDim2.new(0.5, -20, 0, math.min(#opts.Options * 32, 160))
+    dropList.Position = UDim2.new(0.5, 4, 1, 4)
+    dropList.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+    dropList.BorderSizePixel = 0
+    dropList.Visible = false
+    dropList.ZIndex = 10
+    Instance.new("UICorner", dropList).CornerRadius = UDim.new(0, 8)
+
+    -- Dropdown border
+    local dropBorder = Instance.new("UIStroke", dropList)
+    dropBorder.Thickness = 1.5
+    dropBorder.Color = Color3.fromRGB(50, 50, 55)
+    dropBorder.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+
+    -- Dropdown shadow
+    local dropShadow = Instance.new("Frame", dropList)
+    dropShadow.Size = UDim2.new(1, 6, 1, 6)
+    dropShadow.Position = UDim2.new(0, -3, 0, -3)
+    dropShadow.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    dropShadow.BackgroundTransparency = 0.7
+    dropShadow.ZIndex = -1
+    Instance.new("UICorner", dropShadow).CornerRadius = UDim.new(0, 10)
+
+    local scrollFrame = Instance.new("ScrollingFrame", dropList)
+    scrollFrame.Size = UDim2.new(1, 0, 1, 0)
+    scrollFrame.CanvasSize = UDim2.new(0, 0, 0, #opts.Options * 32)
+    scrollFrame.ScrollBarThickness = 4
+    scrollFrame.ScrollBarImageColor3 = Eps1llonUI._ACCENT
+    scrollFrame.BackgroundTransparency = 1
+    scrollFrame.BorderSizePixel = 0
+    scrollFrame.ZIndex = 11
+
+    local listLayout = Instance.new("UIListLayout", scrollFrame)
+    listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+    local currentValue = opts.Default
+    
     for i, option in ipairs(opts.Options) do
-        local item = Instance.new("TextButton", list)
-        item.Size = UDim2.new(1, 0, 0, 28)
-        item.Position = UDim2.new(0, 0, 0, (i-1)*28)
-        item.BackgroundColor3 = Color3.fromRGB(32,32,36)
-        item.BorderSizePixel = 0
-        item.Font = Enum.Font.Gotham
-        item.TextSize = 14
-        item.TextColor3 = Color3.fromRGB(220,220,220)
-        item.Text = option
-        Instance.new("UICorner", item).CornerRadius = UDim.new(0,2)
-        item.MouseButton1Click:Connect(function()
-            btn.Text = option
-            list.Visible = false
+        local optBtn = Instance.new("TextButton", scrollFrame)
+        optBtn.Size = UDim2.new(1, 0, 0, 32)
+        optBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+        optBtn.BorderSizePixel = 0
+        optBtn.Text = option
+        optBtn.Font = Enum.Font.GothamMedium
+        optBtn.TextSize = 14
+        optBtn.TextColor3 = Color3.fromRGB(220, 220, 225)
+        optBtn.TextXAlignment = Enum.TextXAlignment.Left
+        optBtn.ZIndex = 12
+        optBtn.LayoutOrder = i
+
+        local optPadding = Instance.new("UIPadding", optBtn)
+        optPadding.PaddingLeft = UDim.new(0, 12)
+
+        optBtn.MouseEnter:Connect(function()
+            TweenService:Create(optBtn, TweenInfo.new(0.15, Enum.EasingStyle.Quad), {
+                BackgroundColor3 = Color3.fromRGB(45, 45, 50)
+            }):Play()
+        end)
+        
+        optBtn.MouseLeave:Connect(function()
+            TweenService:Create(optBtn, TweenInfo.new(0.15, Enum.EasingStyle.Quad), {
+                BackgroundColor3 = Color3.fromRGB(35, 35, 40)
+            }):Play()
+        end)
+
+        optBtn.MouseButton1Click:Connect(function()
+            currentValue = option
+            dropBtn.Text = option
+            dropList.Visible = false
+            TweenService:Create(arrow, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+                Rotation = 0
+            }):Play()
             if opts.Callback then opts.Callback(option) end
         end)
     end
 
-    btn.MouseButton1Click:Connect(function()
-        list.Visible = not list.Visible
+    dropBtn.MouseButton1Click:Connect(function()
+        dropList.Visible = not dropList.Visible
+        TweenService:Create(arrow, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
+            Rotation = dropList.Visible and 180 or 0
+        }):Play()
     end)
 
-    return cont
+    -- Theme coloring
+    Eps1llonUI._OnThemeChange = Eps1llonUI._OnThemeChange or {}
+    table.insert(Eps1llonUI._OnThemeChange, function(accent)
+        arrow.TextColor3 = accent
+        scrollFrame.ScrollBarImageColor3 = accent
+    end)
+
+    return cont, function() return currentValue end
 end
 
 function Eps1llonUI:SetTabCallback(tab, callback)
@@ -723,6 +761,12 @@ UserInputService.InputBegan:Connect(function(i, p)
         setMainVisible(not mainFrame.Visible)
     end
 end)
+
+-- UI Settings tab (if it doesn't exist, create it)
+if not tabSections["UI Settings"] then
+    Eps1llonUI:AddTab("UI Settings")
+end
+
 do
     local uiSettings = tabSections["UI Settings"]
     local row1 = Instance.new("Frame", uiSettings)
@@ -761,6 +805,7 @@ do
             end
         end)
     end)
+    
     local row2 = Instance.new("Frame", uiSettings)
     row2.Size                = UDim2.new(1, -40, 0, 30)
     row2.Position            = UDim2.new(0, 20, 0, 80)
@@ -819,5 +864,5 @@ do
     end)
 end
 
-print("[Eps1llonUI] Script loaded successfully")
+print("[Eps1llonUI] Script loaded successfully with Rayfield-inspired design elements")
 return Eps1llonUI
